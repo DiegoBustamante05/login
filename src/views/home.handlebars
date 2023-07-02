@@ -1,5 +1,7 @@
 <div>
-    <h3>{{msg}} {{firstName}} {{lastName}} </h3>
+    {{#if firstName}}
+    <h3>Welcome {{firstName}} {{lastName}}</h3>
+    {{/if}}
     <h1 class="text-center">{{title}}</h1>
     <div class="container">
         <div class="row">

@@ -28,6 +28,8 @@ routerLogin.post('/register', async (req, res) => {
             admin: false
         });
         req.session.firstName = firstName;
+        req.session.lastName = lastName;
+        req.session.age = age;
         req.session.email = email;
         req.session.admin = false;
         return res.redirect('/profile');
@@ -48,7 +50,7 @@ routerLogin.post('/login', async (req, res) => {
     console.log(email, password)
     if (!email || !password) {
         return res.status(400).render('error-page', {
-            msg: 'the username or password is incorrect, please try again'
+            msg: 'the username or password does not exist'
         });
     }
     try {
@@ -57,99 +59,20 @@ routerLogin.post('/login', async (req, res) => {
         });
         if (foundUser && foundUser.password === password) {
             req.session.firstName = foundUser.firstName;
+            req.session.lastName = foundUser.lastName;
+            req.session.age = foundUser.age
             req.session.email = foundUser.email;
             req.session.admin = foundUser.admin;
             return res.redirect('/view/products');
         } else {
             return res.status(400).render('error-page', {
-                msg: 'email o pass incorrectos'
+                msg: 'the username or password is incorrect, please try again'
             });
         }
     } catch (e) {
         console.log(e);
         return res.status(500).render('error-page', {
-            msg: 'error inesperado en servidor'
+            msg: 'unexpected server error'
         });
     }
 });
-
-/* 
-loginRouter.get('/', async (req, res) => {
-  try {
-    const users = await Service.getAll();
-    console.log(users);
-    return res.status(200).json({
-      status: 'success',
-      msg: 'listado de usuarios',
-      data: users,
-    });
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({
-      status: 'error',
-      msg: 'something went wrong :(',
-      data: {},
-    });
-  }
-});
-
-loginRouter.post('/', async (req, res) => {
-  try {
-    const { firstName, lastName, email } = req.body;
-    const userCreated = await Service.createOne(firstName, lastName, email);
-    return res.status(201).json({
-      status: 'success',
-      msg: 'user created',
-      data: userCreated,
-    });
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({
-      status: 'error',
-      msg: 'something went wrong :(',
-      data: {},
-    });
-  }
-});
-
-loginRouter.delete('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-
-    //TODO LLAMAR A OTA FUNCION
-    return res.status(200).json({
-      status: 'success',
-      msg: 'user deleted',
-      data: {},
-    });
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({
-      status: 'error',
-      msg: 'something went wrong :(',
-      data: {},
-    });
-  }
-});
-
-loginRouter.put('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { firstName, lastName, email } = req.body;
-
-    //TODO LLAMAR A OTRA FUNCION
-    return res.status(201).json({
-      status: 'success',
-      msg: 'user uptaded',
-      data: { _id: id, firstName, lastName, email },
-    });
-  } catch (e) {
-    console.log(e);
-    return res.status(500).json({
-      status: 'error',
-      msg: 'something went wrong :(',
-      data: {},
-    });
-  }
-});
- */
